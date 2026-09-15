@@ -38,6 +38,7 @@ cd QuadraticEquation
 g++ QuadraticEquationFunction.cpp QuadraticEquation.cpp -o QuadraticEquation
 ./QuadraticEquation
 ```
+需要加可执行权限 `chmod +x QuadraticEquation`。
 
 ### 输入方式
 
