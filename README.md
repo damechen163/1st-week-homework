@@ -1,6 +1,6 @@
 # 第一周作业
 ## 问题回答
-- 见 `Answer.md`。
+- 见 `Answers_of_the_questions/Answer.md`。
 ## 一元二次方程高精度计算器
 
 命令行版 `ax² + bx + c = 0` 精确求解器。支持整数、小数、分数输入，高精度计算。
@@ -8,14 +8,15 @@
 
 | 文件 | 作用 |
 | --- | --- |
-| `QuadraticEquation.h` | `Big` / `Rat` 数据结构与函数声明 |
-| `QuadraticEquationFunction.cpp` | 全部高精度数学运算与求解 |
-| `QuadraticEquation.cpp` | 命令行主程序 |
+| `QuadraticEquation/QuadraticEquation.h` | `Big` / `Rat` 数据结构与函数声明 |
+| `QuadraticEquation/QuadraticEquation.cpp` | 全部高精度数学运算与求解 |
+| `QuadraticEquation/QuadraticEquation.cpp` | 命令行主程序 |
 | `README.md` | 项目说明 |
 
 ### 编译与运行
 
 ```bash
+cd QuadraticEquation
 g++ QuadraticEquationFunction.cpp QuadraticEquation.cpp -o QuadraticEquation
 ./QuadraticEquation
 ```
