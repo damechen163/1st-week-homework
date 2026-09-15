@@ -48,6 +48,16 @@ if (str == NULL)
 ### 19. 每执行一次GetHeapString或FreeHeapString函数，str的指向是否发生变化？
 - 会。
 ### 20. 请尝试先给出如下输出结果，再运行程序验证你的结论
+```text
+【多种存储方式的C-字符串数组排序测试】
+sizeof(strA) : 300 Bytes,       sizeof(*strA) : 20 Bytes,       n1 = 15
+sizeof(strB) : 120 Bytes,       sizeof(*strB) : 8 Bytes,        n2 = 15
+
+sizeof(strC) : 8 Bytes
+sizeof(strD) : 8 Bytes
+sizeof(strE) : 8 Bytes
+```
+`char` 占 1 个字节，`char*` 占 8 个字节。
 ### 21. 请分别画出strA，strB，strC，strD，strE的结构图，指出它们所在的空间（常量池、栈区、堆区）
 - `strA`：
 栈区二维数组。
