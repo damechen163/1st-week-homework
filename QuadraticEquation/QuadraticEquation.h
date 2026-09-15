@@ -28,7 +28,7 @@ Big mul(const Big& a, const Big& b);     // 大整数乘法，O(n^2)
 Big quo(const Big& a, const Big& b);     // 求商（丢弃余数）
 void divmod(const Big& a, const Big& b, Big& q, Big& r);  ///< 带余除法，O(n^2)
 Big gcd(Big a, Big b);                   // 最大公约数（欧几里得算法）
-Big isqrt(const Big& n);                 // 整数平方根 floor(sqrt(n))（牛顿迭代）
+Big isqrt(const Big& n);                 // 整数平方根 floor(sqrt(n))（x - f(x)/f'(x)）
 
 Rat ri(int v);                                        // 小整数 → 有理数
 Rat rNorm(Big p, Big q);                              // 约分，并把负号归到分子
@@ -52,5 +52,5 @@ struct Solution {
 };
 
 void parseEquation(const std::string& s, Rat& A, Rat& B, Rat& C);  // 取下划线处的 a b c
-Solution solve(const Rat& a, const Rat& b, const Rat& c);  // 只求解，不输出
-void printSolution(const Solution& s, bool math);          // 只输出，不计算
+Solution solve(const Rat& a, const Rat& b, const Rat& c);  // 求解
+void printSolution(const Solution& s, bool math);          // 输出
