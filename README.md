@@ -2,7 +2,7 @@
 
 ## 问题回答
 
-见 `Answers_of_the_questions/Answer.md`。
+见 [`Answers_of_the_questions/Answer.md`](Answers_of_the_questions/Answer.md)。
 
 无力吐槽这个教案有多少年没改了，还在用 32 位代码······以及为何又用的是 GBK 编码。
 
