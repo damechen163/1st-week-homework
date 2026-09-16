@@ -77,7 +77,10 @@ Big subAbs(const Big& a, const Big& b) {
     Big r; int borrow = 0;
     for (size_t i = 0; i < a.d.size(); i++) {
         int v = a.d[i] - borrow - (i < b.d.size() ? b.d[i] : 0);
-        if (v < 0) { v += 10; borrow = 1; } else borrow = 0;
+        if (v < 0) {
+            v += 10; borrow = 1;
+        }
+        else borrow = 0;
         r.d.push_back((unsigned char)v);
     }
     trim(r);
@@ -273,7 +276,9 @@ std::string oneDec(const Big& A, const Big& B, const Big& C, const Big& r, bool 
     return decStr(num, mul(C, sc), prec);
 }
 static void addTerm(const std::string& t, Rat& A, Rat& B, Rat& C) {
-    if (t.empty() || t == "+" || t == "-") return;
+    if (t.empty() || t == "+" || t == "-") {
+        return;
+    }
     size_t x = t.find('x');
     std::string cs = x == std::string::npos ? t : t.substr(0, x);
     if (cs.empty() || cs == "+") {
@@ -368,9 +373,16 @@ Solution solve(const Rat& a, const Rat& b, const Rat& c) {
     }
     Big g = gcd(gcd(A, B), C);
 
-    if (!isZero(g)) { A = quo(A, g); B = quo(B, g); C = quo(C, g); }
+    if (!isZero(g)) {
+        A = quo(A, g);
+        B = quo(B, g);
+        C = quo(C, g);
+    }
     s.kind = Solution::Two;
-    s.A = A; s.B = B; s.C = C; s.r = r;
+    s.A = A;
+    s.B = B;
+    s.C = C;
+    s.r = r;
     return s;
 }
 static std::string fmtRat(const Rat& x, bool math) {
