@@ -388,15 +388,26 @@ Solution solve(const Rat& a, const Rat& b, const Rat& c) {
 static std::string fmtRat(const Rat& x, bool math) {
     return math ? rStr(x) : decStr(x.p, x.q, PREC);
 }
-static std::string termStr(const std::string& v, const std::string& x, bool first) {
-    bool neg = !v.empty() && v[0] == '-';
-    std::string body = neg ? v.substr(1) : v;
-    return (first ? std::string(neg ? "-" : "") : (neg ? " - " : " + ")) + body + x;
+static std::string eqStr(const Solution& s, bool math) {
+    const Rat* v[3] = {&s.a, &s.b, &s.c};
+    const char* xs[3] = {"x^2", "x", ""};
+    std::string e;
+    for (int i = 0; i < 3; i++) {
+        if (isZero(v[i]->p)) {
+            continue;
+        }
+        bool neg = v[i]->p.neg;
+        bool one = cmpAbs(v[i]->p, ONE) == 0 && cmpAbs(v[i]->q, ONE) == 0;
+        std::string body = (one && i < 2) ? "" : fmtRat(*v[i], math);
+        if (neg && !body.empty()) {
+            body.erase(0, 1);
+        }
+        e += (e.empty() ? (neg ? "-" : "") : (neg ? " - " : " + ")) + body + xs[i];
+    }
+    return e.empty() ? "0" : e;
 }
 void printSolution(const Solution& s, bool math) {
-    std::cout << "Equation: " << termStr(fmtRat(s.a, math), "x^2", true)
-              << termStr(fmtRat(s.b, math), "x", false)
-              << termStr(fmtRat(s.c, math), "", false) << " = 0\n";
+    std::cout << "Equation: " << eqStr(s, math) << " = 0\n";
     if (s.kind == Solution::Nonquadratic) {
         std::cout << "Error: Nonquadratic\n"; return;
     }
