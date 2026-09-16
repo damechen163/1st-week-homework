@@ -26,7 +26,7 @@ Big subAbs(const Big& a, const Big& b);  // |a| - |b|，要求 |a| >= |b|
 Big add(const Big& a, const Big& b), sub(const Big& a, const Big& b);  // 加法 / 减法，O(n)
 Big mul(const Big& a, const Big& b);     // 大整数乘法，O(n^2)
 Big quo(const Big& a, const Big& b);     // 求商（丢弃余数）
-void divmod(const Big& a, const Big& b, Big& q, Big& r);  ///< 带余除法，O(n^2)
+void divmod(const Big& a, const Big& b, Big& q, Big& r);  // 带余除法，O(n^2)
 Big gcd(Big a, Big b);                   // 最大公约数（欧几里得算法）
 Big isqrt(const Big& n);                 // 整数平方根 floor(sqrt(n))（x - f(x)/f'(x)）
 
@@ -42,15 +42,15 @@ void sqrtSplit(const Big& n, Big& s, Big& r);    // 分解 n = s^2 · r，r 无�
 std::string oneRoot(Big A, Big B, Big C, const Big& r, bool plus);  // (A ± B√r)/C 的 MATH 形式
 std::string oneDec(const Big& A, const Big& B, const Big& C, const Big& r, bool plus, int prec);
 
-//求解结果：根的情形 + 判别式 + 最简根式 x = (A ± B√r)/C
+// 求解结果：根的情形 + 判别式 + 最简根式 x = (A ± B√r)/C
 struct Solution {
-    enum Kind { Nonquadratic, NoReal, Double, Two };  // 依次为 a = 0、D < 0、D = 0、D > 0
+    enum Kind { BadFormat, Nonquadratic, NoReal, Double, Two };  // 依次为格式错误、a = 0、D < 0、D = 0、D > 0
     Kind kind = Nonquadratic;  // 根的情形
     Rat a, b, c;               // 原方程系数（输出时回显用）
     Rat D;                     // 判别式 D = b^2 - 4ac
     Big A, B, C, r;            // 根式；Double 时 B = 0、r = 1，根即 A / C
 };
 
-void parseEquation(const std::string& s, Rat& A, Rat& B, Rat& C);  // 取下划线处的 a b c
+bool parseEquation(const std::string& s, Rat& A, Rat& B, Rat& C);  // 取下划线处的 a b c，格式不对时返回 false
 Solution solve(const Rat& a, const Rat& b, const Rat& c);  // 求解
 void printSolution(const Solution& s, bool math);          // 输出

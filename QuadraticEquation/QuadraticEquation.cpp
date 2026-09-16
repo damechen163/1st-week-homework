@@ -25,8 +25,14 @@ int main() {
             continue;
         }
         Rat A, B, C;
-        parseEquation(line, A, B, C);
-        printSolution(solve(A, B, C), math);
+        Solution s;
+        if (parseEquation(line, A, B, C)) {
+            s = solve(A, B, C);
+        }
+        else {
+            s.kind = Solution::BadFormat;
+        }
+        printSolution(s, math);
     }
     return 0;
 }

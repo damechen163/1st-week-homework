@@ -37,7 +37,9 @@ Big fromStr(const std::string& s) {
         i++;
     }
     for (size_t j = s.size(); j-- > i; ) {
-        if (s[j] >= '0' && s[j] <= '9') a.d.push_back((unsigned char)(s[j] - '0'));
+        if (s[j] >= '0' && s[j] <= '9') {
+            a.d.push_back((unsigned char)(s[j] - '0'));
+        }
     }
     if (a.d.empty()) {
         a.d.push_back(0);
@@ -64,7 +66,8 @@ int cmpAbs(const Big& a, const Big& b) {
     return 0;
 }
 Big addAbs(const Big& a, const Big& b) {
-    Big r; int carry = 0;
+    Big r;
+    int carry = 0;
     for (size_t i = 0; i < a.d.size() || i < b.d.size() || carry; i++) {
         int v = carry + (i < a.d.size() ? a.d[i] : 0) + (i < b.d.size() ? b.d[i] : 0);
         r.d.push_back((unsigned char)(v % 10));
@@ -74,13 +77,17 @@ Big addAbs(const Big& a, const Big& b) {
     return r;
 }
 Big subAbs(const Big& a, const Big& b) {
-    Big r; int borrow = 0;
+    Big r;
+    int borrow = 0;
     for (size_t i = 0; i < a.d.size(); i++) {
         int v = a.d[i] - borrow - (i < b.d.size() ? b.d[i] : 0);
         if (v < 0) {
-            v += 10; borrow = 1;
+            v += 10;
+            borrow = 1;
         }
-        else borrow = 0;
+        else {
+            borrow = 0;
+        }
         r.d.push_back((unsigned char)v);
     }
     trim(r);
@@ -98,24 +105,31 @@ Big add(const Big& a, const Big& b) {
         return ZERO;
     }
     Big r = c > 0 ? subAbs(a, b) : subAbs(b, a);
-    r.neg = c > 0 ? a.neg : b.neg; trim(r); return r;
+    r.neg = c > 0 ? a.neg : b.neg;
+    trim(r);
+    return r;
 }
 Big sub(const Big& a, const Big& b) {
     return add(a, negate(b));
 }
 Big mul(const Big& a, const Big& b) {
-    Big r; r.d.assign(a.d.size() + b.d.size(), 0);
+    Big r;
+    r.d.assign(a.d.size() + b.d.size(), 0);
     for (size_t i = 0; i < a.d.size(); i++) {
         int carry = 0;
         for (size_t j = 0; j < b.d.size() || carry; j++) {
             int v = r.d[i + j] + carry + (j < b.d.size() ? a.d[i] * b.d[j] : 0);
-            r.d[i + j] = (unsigned char)(v % 10); carry = v / 10;
+            r.d[i + j] = (unsigned char)(v % 10);
+            carry = v / 10;
         }
     }
-    r.neg = a.neg != b.neg; trim(r); return r;
+    r.neg = a.neg != b.neg;
+    trim(r);
+    return r;
 }
 void divmod(const Big& a, const Big& b, Big& q, Big& r) {
-    Big A = absBig(a), B = absBig(b);
+    Big A = absBig(a);
+    Big B = absBig(b);
     q = ZERO;
     r = ZERO;
     if (isZero(B)) {
@@ -126,26 +140,29 @@ void divmod(const Big& a, const Big& b, Big& q, Big& r) {
         trim(r);
         unsigned char cnt = 0;
         while (cmpAbs(r, B) >= 0) {
-            r = subAbs(r, B); cnt++;
+            r = subAbs(r, B);
+            cnt++;
         }
         q.d.insert(q.d.begin(), cnt);
     }
     trim(q);
     trim(r);
-    q.neg = a.neg != b.neg && !isZero(q), r.neg = a.neg && !isZero(r);
+    q.neg = a.neg != b.neg && !isZero(q);
+    r.neg = a.neg && !isZero(r);
 }
 Big quo(const Big& a, const Big& b) {
     Big q, r;
     divmod(a, b, q, r);
-    return q; 
+    return q;
 }
 Big gcd(Big a, Big b) {
-    a = absBig(a); b = absBig(b);
+    a = absBig(a);
+    b = absBig(b);
     while (!isZero(b)) {
         Big q, r;
         divmod(a, b, q, r);
         a = b;
-        b = r; 
+        b = r;
     }
     return a;
 }
@@ -186,7 +203,8 @@ Rat rFromStr(const std::string& s) {
     }
     size_t dot = s.find('.');
     if (dot != std::string::npos) {
-        std::string ip = s.substr(0, dot), fp = s.substr(dot + 1);
+        std::string ip = s.substr(0, dot);
+        std::string fp = s.substr(dot + 1);
         if (ip.empty() || ip == "+" || ip == "-") {
             ip += "0";
         }
@@ -211,15 +229,21 @@ Rat rDiv(Rat a, Rat b) {
 }
 std::string decStr(Big num, Big den, int prec) {
     bool neg = num.neg != den.neg && !isZero(num);
-    num = absBig(num); den = absBig(den);
-    Big q, r; divmod(num, den, q, r);
-    std::string s = toStr(q), f;
+    num = absBig(num);
+    den = absBig(den);
+    Big q, r;
+    divmod(num, den, q, r);
+    std::string s = toStr(q);
+    std::string f;
     for (int i = 0; i <= prec && !isZero(r); i++) {
-        Big d, rr; divmod(mul(r, TEN), den, d, rr); r = rr;
+        Big d, rr;
+        divmod(mul(r, TEN), den, d, rr);
+        r = rr;
         f += toStr(d);
     }
     if ((int)f.size() > prec) {
-        int g = f.back() - '0'; f.pop_back();
+        int g = f.back() - '0';
+        f.pop_back();
         if (g >= 5) {
             std::string t = s + f;
             int i = (int)t.size() - 1;
@@ -248,7 +272,12 @@ void sqrtSplit(const Big& n, Big& s, Big& r) {
         }
         Big q, rem;
         for (;;) {
-            divmod(r, f2, q, rem); if (!isZero(rem)) break; r = q; s = mul(s, f);
+            divmod(r, f2, q, rem);
+            if (!isZero(rem)) {
+                break;
+            }
+            r = q;
+            s = mul(s, f);
         }
     }
 }
@@ -271,83 +300,89 @@ std::string oneDec(const Big& A, const Big& B, const Big& C, const Big& r, bool 
         return decStr(plus ? add(A, B) : sub(A, B), C, prec);
     }
     int k = prec + (int)toStr(B).size() + 2;
-    Big sc = pow10(k), S = isqrt(mul(r, mul(sc, sc)));
+    Big sc = pow10(k);
+    Big S = isqrt(mul(r, mul(sc, sc)));
     Big num = plus ? add(mul(A, sc), mul(B, S)) : sub(mul(A, sc), mul(B, S));
     return decStr(num, mul(C, sc), prec);
 }
-static void addTerm(const std::string& t, Rat& A, Rat& B, Rat& C) {
-    if (t.empty() || t == "+" || t == "-") {
-        return;
-    }
-    size_t x = t.find('x');
-    std::string cs = x == std::string::npos ? t : t.substr(0, x);
-    if (cs.empty() || cs == "+") {
-        cs = "1";
-    }
-    else if (cs == "-") {
-        cs = "-1";
-    }
-    Rat v = rFromStr(cs);
-    if (x == std::string::npos) {
-        C = rAdd(C, v);
-    }
-    else if (x + 1 < t.size() && (t[x + 1] == '^' || t[x + 1] == '\xC2')) {
-        A = rAdd(A, v);
-    }
-    else {
-        B = rAdd(B, v);
-    }
+static bool isDig(char c) {
+    return (unsigned)(c - '0') < 10;
 }
-void parseEquation(const std::string& s, Rat& A, Rat& B, Rat& C) {
+static bool validNum(const std::string& s) {
+    size_t i = 0;
+    size_t n = s.size();
+    if (i < n && (s[i] == '+' || s[i] == '-')) {
+        ++i;
+    }
+    size_t d = 0;
+    while (i < n && isDig(s[i])) {
+        ++i;
+        ++d;
+    }
+    if (i < n && s[i] == '.') {
+        ++i;
+        size_t f = 0;
+        while (i < n && isDig(s[i])) {
+            ++i;
+            ++f;
+        }
+        if (!f) {
+            return false;
+        }
+    }
+    else if (!d) {
+        return false;
+    }
+    if (i < n && s[i] == '/') {
+        ++i;
+        size_t q = 0;
+        bool nz = false;
+        while (i < n && isDig(s[i])) {
+            nz |= s[i] != '0';
+            ++i;
+            ++q;
+        }
+        if (!q || !nz) {
+            return false;
+        }
+    }
+    return i == n;
+}
+bool parseEquation(const std::string& s, Rat& A, Rat& B, Rat& C) {
     A = B = C = R0;
-    if (s.find('x') == std::string::npos) {
-        std::vector<std::string> v;
-        std::string tok;
-        for (char ch : s + " ") {
-            if (ch == ' ' || ch == '\t' || ch == '\r' || ch == ',') {
-                if (!tok.empty()) {
-                    v.push_back(tok);
-                    tok.clear();
-                }
-            }
-            else {
-                tok += ch;
+    std::vector<std::string> v;
+    std::string tok;
+    for (char ch : s + " ") {
+        if (ch == ' ' || ch == '\t' || ch == '\r' || ch == ',') {
+            if (!tok.empty()) {
+                v.push_back(tok);
+                tok.clear();
             }
         }
-        if (v.size() > 2) {
-            C = rFromStr(v[2]);
+        else {
+            tok += ch;
         }
-        if (v.size() > 1) {
-            B = rFromStr(v[1]);
-        }
-        if (v.size() > 0) {
-            A = rFromStr(v[0]);
-        }
-        return;
     }
-    std::string t;
-    for (char ch : s) {
-        if (ch == ' ' || ch == '\t' || ch == '\r') {
-            continue;
-        }
-        if (ch == '=') {
-            break;
-        }
-        if ((ch == '+' || ch == '-') && !t.empty()) {
-            addTerm(t, A, B, C); t.clear();
-        }
-        t += ch;
+    if (v.size() != 3 || !validNum(v[0]) || !validNum(v[1]) || !validNum(v[2])) {
+        return false;
     }
-    addTerm(t, A, B, C);
+    A = rFromStr(v[0]);
+    B = rFromStr(v[1]);
+    C = rFromStr(v[2]);
+    return true;
 }
 Solution solve(const Rat& a, const Rat& b, const Rat& c) {
-    Solution s; s.a = a; s.b = b; s.c = c;
+    Solution s;
+    s.a = a;
+    s.b = b;
+    s.c = c;
     if (isZero(a.p)) {
         return s;
     }
     s.D = rSub(rMul(b, b), rMul(ri(4), rMul(a, c)));
     if (s.D.p.neg) {
-        s.kind = Solution::NoReal; return s;
+        s.kind = Solution::NoReal;
+        return s;
     }
     if (isZero(s.D.p)) {
         Rat x = rDiv(Rat{negate(b.p), b.q}, rMul(ri(2), a));
@@ -363,16 +398,15 @@ Solution solve(const Rat& a, const Rat& b, const Rat& c) {
     Rat nb{negate(b.p), b.q};
     Rat num = rMul(nb, Rat{s.D.q, ONE});
     Rat den = rMul(rMul(ri(2), a), Rat{s.D.q, ONE});
-    Big A = mul(num.p, den.q), 
-        B = mul(t, den.q), 
-        C = mul(num.q, den.p);
+    Big A = mul(num.p, den.q);
+    Big B = mul(t, den.q);
+    Big C = mul(num.q, den.p);
     if (C.neg) {
         A = negate(A);
         B = negate(B);
-        C = negate(C); 
+        C = negate(C);
     }
     Big g = gcd(gcd(A, B), C);
-
     if (!isZero(g)) {
         A = quo(A, g);
         B = quo(B, g);
@@ -407,14 +441,19 @@ static std::string eqStr(const Solution& s, bool math) {
     return e.empty() ? "0" : e;
 }
 void printSolution(const Solution& s, bool math) {
+    if (s.kind == Solution::BadFormat) {
+        std::cout << "Error: Incorrect Format\n";
+        return;
+    }
     std::cout << "Equation: " << eqStr(s, math) << " = 0\n";
     if (s.kind == Solution::Nonquadratic) {
-        std::cout << "Error: Nonquadratic\n"; return;
+        std::cout << "Error: Nonquadratic\n";
+        return;
     }
     std::cout << "Delta = " << fmtRat(s.D, math) << "\n";
     if (s.kind == Solution::NoReal) {
         std::cout << "No real roots\n";
-        return; 
+        return;
     }
     int n = s.kind == Solution::Double ? 1 : 2;
     for (int i = 0; i < n; i++) {
