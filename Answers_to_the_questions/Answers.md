@@ -36,7 +36,7 @@
 - 声明中它是什么数组它就是什么数组。
 ## Main.cpp
 ### 18. 此处为什么要将str初始化为NULL，否则会发生什么情况？
-- 因为在 `GetHeapString(char*& str, const char* source)	`中：
+- 因为在 `GetHeapString(char*& str, const char* source)`中：
 ```cpp
 if (str == NULL)
 {
