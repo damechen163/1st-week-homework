@@ -3,8 +3,12 @@
 static const Big ZERO{false, {0}}, ONE{false, {1}}, TWO{false, {2}}, TEN{false, {0, 1}};
 static const Rat R0{ZERO, ONE};
 static void trim(Big& a) {
-    while (a.d.size() > 1 && a.d.back() == 0) a.d.pop_back();
-    if (a.d.size() == 1 && a.d[0] == 0) a.neg = false;
+    while (a.d.size() > 1 && a.d.back() == 0) {
+        a.d.pop_back();
+    }
+    if (a.d.size() == 1 && a.d[0] == 0) {
+        a.neg = false;
+    }
 }
 bool isZero(const Big& a) {
     return a.d.size() == 1 && a.d[0] == 0;
@@ -14,7 +18,9 @@ Big absBig(Big a) {
     return a;
 }
 Big negate(Big a) {
-    if (!isZero(a)) a.neg = !a.neg;
+    if (!isZero(a)) {
+        a.neg = !a.neg;
+    }
     return a;
 }
 Big pow10(size_t k) {
@@ -47,7 +53,9 @@ std::string toStr(const Big& a) {
     return s;
 }
 int cmpAbs(const Big& a, const Big& b) {
-    if (a.d.size() != b.d.size()) return a.d.size() < b.d.size() ? -1 : 1;
+    if (a.d.size() != b.d.size()) {
+        return a.d.size() < b.d.size() ? -1 : 1;
+    }
     for (size_t i = a.d.size(); i-- > 0; ) {
         if (a.d[i] != b.d[i]) {
             return a.d[i] < b.d[i] ? -1 : 1;
@@ -314,19 +322,28 @@ void parseEquation(const std::string& s, Rat& A, Rat& B, Rat& C) {
     }
     std::string t;
     for (char ch : s) {
-        if (ch == ' ' || ch == '\t' || ch == '\r') continue;
-        if (ch == '=') break;
-        if ((ch == '+' || ch == '-') && !t.empty()) { addTerm(t, A, B, C); t.clear(); }
+        if (ch == ' ' || ch == '\t' || ch == '\r') {
+            continue;
+        }
+        if (ch == '=') {
+            break;
+        }
+        if ((ch == '+' || ch == '-') && !t.empty()) {
+            addTerm(t, A, B, C); t.clear();
+        }
         t += ch;
     }
     addTerm(t, A, B, C);
 }
 Solution solve(const Rat& a, const Rat& b, const Rat& c) {
     Solution s; s.a = a; s.b = b; s.c = c;
-    if (isZero(a.p)) return s;
+    if (isZero(a.p)) {
+        return s;
+    }
     s.D = rSub(rMul(b, b), rMul(ri(4), rMul(a, c)));
-    if (s.D.p.neg) { s.kind = Solution::NoReal; return s; }
-
+    if (s.D.p.neg) {
+        s.kind = Solution::NoReal; return s;
+    }
     if (isZero(s.D.p)) {
         Rat x = rDiv(Rat{negate(b.p), b.q}, rMul(ri(2), a));
         s.kind = Solution::Double;
