@@ -4,7 +4,7 @@
 
 见 [`Answers_to_the_questions/Answers.md`](Answers_to_the_questions/Answers.md)。
 
-无力吐槽这个教案有多少年没改了，还在用 32 位代码，现在的指针都 64 位了，早就不能转换成 `int` 了······
+无力吐槽这个教案有多少年没改了，还在用 32 位代码，现在的指针都 64 位了，在语法检查严格的编译器上已经不能转换成 `int` 了······
 
 以及为何又用的是 GBK 编码？还要自己转成 UTF-8。还有为什么代码不支持 Linux（conio.h），太欺负人了😡。
 
